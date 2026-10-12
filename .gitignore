@@ -1,0 +1,19 @@
+# --- Secrets / environment ---
+# The real .env holds the MongoDB root credentials and must never be committed.
+.env
+*.env
+!.env.example
+
+# --- Editor / OS ---
+.vscode/
+*.code-workspace
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# --- Python ---
+__pycache__
+.venv
+
+# --- Personal planning notes (Turkish, not part of the public project) ---
+PROJE-PLANI.md
