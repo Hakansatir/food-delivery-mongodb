@@ -1,0 +1,15 @@
+services:
+  mongodb:
+    image: mongo:8.0                 # official MongoDB 8.0 image
+    container_name: food-delivery-mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+    ports:
+      - "27017:27017"           # host:container — MongoDB's default port
+    volumes:
+      # Named volume: the database must survive container removal.
+      - mongodata:/data/db          # where MongoDB stores its data inside the container
+
+volumes:
+  mongodata:
