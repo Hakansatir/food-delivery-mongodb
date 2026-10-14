@@ -22,7 +22,7 @@ erDiagram
 | `restaurants.menu` | embed | The menu is bounded and always read together with the restaurant. |
 | `orders.items` | embed (snapshot) | Menu prices can change later, and an order must keep the price at the time of purchase; otherwise old receipts and revenue reports would change. |
 | `orders.statusHistory` | embed | An order has at most ~6 statuses (bounded), and they are always shown together on the order tracking page. |
-| `orders.deliveryAddress` | embed (snapshot) | The customer can change the address later, and the order must keep the address at the time of purchase |
+| `orders.deliveryAddress` | embed (snapshot) | The customer can change the address later, and the order must keep the address at the time of purchase. |
 | `orders` → user / restaurant / courier | reference | A customer has many orders; if the customer's phone number were copied into each order, every order would need an update when it changes. Users, restaurants and couriers are also read independently. |
 | `reviews` | separate collection | Reviews can grow without limit, and every time you open a restaurant page, it would load all of its reviews. |
 
@@ -66,8 +66,8 @@ Rule of thumb used for every decision:
     { day: 1, open: "10:00", close: "23:00" }   // day: 1 = Monday … 7 = Sunday
   ],
   menu: [
-    { name: "Döner Kebab", category: "main", price: 8.50, available: true },
-    { name: "Ayran",       category: "drink", price: 2.00, available: true }
+    { name: "Döner Kebab", category: "main", price: NumberDecimal("8.50"), available: true },
+    { name: "Ayran",       category: "drink", price: NumberDecimal("2.00"), available: true }
   ]
 }
 ```
@@ -95,10 +95,10 @@ Rule of thumb used for every decision:
   restaurantId: ObjectId("..."),    // reference → restaurants
   courierId: ObjectId("..."),       // reference → couriers (null until assigned)
   items: [                          // snapshot of the menu at order time
-    { name: "Döner Kebab", unitPrice: 8.50, quantity: 2 },
-    { name: "Ayran",       unitPrice: 2.00, quantity: 1 }
+    { name: "Döner Kebab", unitPrice: NumberDecimal("8.50"), quantity: 2 },
+    { name: "Ayran",       unitPrice: NumberDecimal("2.00"), quantity: 1 }
   ],
-  totalAmount: 19.00,
+  totalAmount: NumberDecimal("19.00"),
   deliveryAddress: {                // snapshot of the user's address at order time
     street: "Oranienstraße 25",
     postalCode: "10999",
@@ -130,6 +130,6 @@ Rule of thumb used for every decision:
 }
 ```
 
-## Open points (decided in Step 3)
+## Money
 
-- Money type: `double` (as above) vs `Decimal128`.
+All money fields use `Decimal128`, because it stores exact decimal values. `double` is binary floating point, so `0.1 + 0.2` returns `0.30000000000000004`, and small errors add up in revenue sums.
