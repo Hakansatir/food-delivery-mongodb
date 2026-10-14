@@ -11,5 +11,7 @@ services:
       # Named volume: the database must survive container removal.
       - mongodata:/data/db          # where MongoDB stores its data inside the container
 
+      # Bind mount: schema scripts are edited on the host and read (read-only) inside the container.
+      - ./schema:/schema:ro         # scripts appear at /schema inside the container
 volumes:
   mongodata:
